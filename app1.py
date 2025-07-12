@@ -61,21 +61,23 @@ if uploaded_file:
         similarity_scores = []
 
         for idx, row in df.iterrows():
-            current_name = row["name"].strip().lower()
-            current_comp = row["full_composition"]
+          current_name = row["name"].strip().lower()
+          current_comp = row["full_composition"]
 
-            # Get all same-name entries
-            same_name_df = df[df["name"].str.strip().str.lower() == current_name]
+              # Get all same-name entries
+          same_name_df = df[df["name"].str.strip().str.lower() == current_name]
 
-            # Compare composition with all same-name entries
-            max_score = max(
-                fuzz.ratio(current_comp, other_comp)
-                for other_comp in same_name_df["full_composition"]
-                if other_comp != current_comp
-            ) if len(same_name_df) > 1 else 100
+              # Exclude current row's composition
+          other_comps = [c for c in same_name_df["full_composition"] if c != current_comp]
 
-            similarity_scores.append(max_score)
-            mismatch_flags.append(1 if max_score < 85 else 0)
+          if other_comps:
+            max_score = max(fuzz.ratio(current_comp, oc) for oc in other_comps)
+          else:
+            max_score = 100  # Only one entry, so consider it matched
+
+          similarity_scores.append(max_score)
+          mismatch_flags.append(1 if max_score < 85 else 0)
+
 
         df["Similarity (%)"] = similarity_scores
         df["Mismatch_Flag"] = mismatch_flags
