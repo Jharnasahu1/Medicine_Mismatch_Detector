@@ -52,8 +52,7 @@ if uploaded_file:
     # Check and filter for valid composition columns
     if "short_composition1" in df.columns and "short_composition2" in df.columns and "name" in df.columns:
         # Filter out rows with both compositions unknown
-        df = df[~((df["short_composition1"].str.lower() == "unknown") &
-                  (df["short_composition2"].str.lower() == "unknown"))]
+        df = df[~((df["short_composition1"].str.lower() == "unknown") & (df["short_composition2"].str.lower() == "unknown"))]
 
         # If no data remains, stop here
         if df.empty:
