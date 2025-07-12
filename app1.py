@@ -86,6 +86,11 @@ if uploaded_file:
         df["Mismatch_Flag"] = mismatch_flags
         df["Status"] = df["Mismatch_Flag"].apply(lambda x: "❌ Mismatched" if x else "✅ Matched")
 
+        st.write("✅ Final row count:", len(df))
+        st.write("✅ Mismatch count:", (df["Mismatch_Flag"] == 1).sum())
+        st.write("✅ Unique 'Status' values:", df["Status"].unique())
+
+
         # Summary chart
         st.subheader("📊 Mismatch Summary")
         summary = df["Status"].value_counts().reset_index()
